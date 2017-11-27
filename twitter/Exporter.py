@@ -24,7 +24,7 @@ def main(argv):
 		opts, args = getopt.getopt(argv, "", ("username=", "near=", "within=", "since=", "until=", "querysearch=", "toptweets", "maxtweets=", "output="))
 
 		tweetCriteria = getTweets.manager.TweetCriteria()
-		outputFileName = "output_got.csv"
+		outputFileName = "_output_got.csv"
 
 		for opt,arg in opts:
 			if opt == '--username':
@@ -35,6 +35,7 @@ def main(argv):
 
 			elif opt == '--until':
 				tweetCriteria.until = arg
+				
 
 			elif opt == '--querysearch':
 				tweetCriteria.querySearch = arg
@@ -56,10 +57,11 @@ def main(argv):
 
 			elif opt == '--output':
 				outputFileName = arg
-				
+
+		outputFileName = tweetCriteria.since + '_output_got.csv'
 		outputFile = codecs.open(outputFileName, "w+", "utf-8")
 
-		outputFile.write('Date,Tweet text,Polarity,Sentiment')
+		outputFile.write('Date,Hour,Minute,Tweet text,Polarity,Sentiment')
 		print('Searching...\n')
 
 		def receiveBuffer(tweets):
@@ -67,15 +69,19 @@ def main(argv):
 				cleaned_tweet=' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)"," ",t.text).split())
 				analysis=TextBlob(cleaned_tweet)
 				if analysis.sentiment.polarity < 0:
-					sentiment="negative"
+					sentiment=-1
 				elif analysis.sentiment.polarity > 0:
-					sentiment="positive"
+					sentiment=1
 				else:
-					sentiment="neutral"
-				outputFile.write(('\n%s,"%s",%f,%s' % (t.date.strftime("%Y-%m-%d %H:%M"),cleaned_tweet,analysis.sentiment.polarity,sentiment)))
+					sentiment=0
+				#outputFile.write(('\n%s,"%s",%f,%s' % (t.date.strftime("%Y-%m-%d %H:%M"),cleaned_tweet,analysis.sentiment.polarity,sentiment)))
+				#date_hour,date_min,sentiment,web_url,date,id
+				#23,39,-1,https://www.nytimes.com/2017/03/01/learning/lesson-plans/401-prompts-for-argumentative-writing.html,3/1/2017,58b75b9c95d0e024902fd01f
+				outputFile.write(('\n%s,%s,%s,"%s",%f,%s' % (t.date.strftime("%m/%d/%Y"),t.date.strftime("%H"),t.date.strftime("%M"),cleaned_tweet,analysis.sentiment.polarity,sentiment)))
+				
 			outputFile.flush();
 			print('More %d saved on file...\n' % len(tweets))
-
+		
 		getTweets.manager.TweetManager.getTweets(tweetCriteria, receiveBuffer)
 
 	except arg:
