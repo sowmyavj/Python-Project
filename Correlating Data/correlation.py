@@ -1,7 +1,9 @@
+from __future__ import division
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import style
 import os
+
 style.use('ggplot')
 
 #create consolidated for News
@@ -30,22 +32,28 @@ for date in data.index:
 #print "##############################"
 consolidated= pd.DataFrame(data=None,columns=["positive_news","negative_news","total_news","positive_tweets","negative_tweets","total_tweets",
 "positive_weather","negative_weather","total_weather"],index=dates)
-consolidated= consolidated.fillna(0)
+consolidated= consolidated.fillna(0.0)
 
 for i in dates:
     newdates=data[data.index== i]
     positive=newdates[newdates["sentiment"]== 1]
     negative=newdates[newdates["sentiment"]== -1]
-    consolidated.at[i, 'positive_news']=positive.shape[0]
-    consolidated.at[i, 'negative_news']=negative.shape[0]
-    consolidated.at[i, 'total_news']=newdates.shape[0]
+    consolidated['positive_news'].astype(float)
+    if newdates.shape[0]!=0:
+        #print positive.shape[0]/newdates.shape[0]
+        consolidated.at[i, 'positive_news']=(positive.shape[0]/newdates.shape[0])
+        #print consolidated.at[i, 'positive_news']
+        consolidated.at[i, 'negative_news']=negative.shape[0]/newdates.shape[0]
+        consolidated.at[i, 'total_news']=newdates.shape[0]
 
     wnewdates=wdata[wdata.index== i]
     wpositive=wnewdates[wnewdates["Weather Sentiment"]== 1]
     wnegative=wnewdates[wnewdates["Weather Sentiment"]== -1]
-    consolidated.at[i, 'positive_weather']=wpositive.shape[0]
-    consolidated.at[i, 'negative_weather']=wnegative.shape[0]
-    consolidated.at[i, 'total_weather']=wnewdates.shape[0]
+    if wnewdates.shape[0] != 0:
+        
+        consolidated.at[i, 'positive_weather']=wpositive.shape[0]/wnewdates.shape[0]
+        consolidated.at[i, 'negative_weather']=wnegative.shape[0]/wnewdates.shape[0]
+        consolidated.at[i, 'total_weather']=wnewdates.shape[0]
     
 lists= os.listdir("./tweets_output_new/")
 #print lists
@@ -57,9 +65,11 @@ for l in lists:
     i= data.index[0]
     positive=data[data["Sentiment"]== 1]
     negative=data[data["Sentiment"]== -1]
-    consolidated.at[i, 'positive_tweets']=positive.shape[0]
-    consolidated.at[i, 'negative_tweets']=negative.shape[0]
-    consolidated.at[i, 'total_tweets']=data.shape[0]
+    if data.shape[0] != 0:
+        print positive.shape[0]/data.shape[0]
+        consolidated.at[i, 'positive_tweets']=positive.shape[0]/data.shape[0]
+        consolidated.at[i, 'negative_tweets']=negative.shape[0]/data.shape[0]
+        consolidated.at[i, 'total_tweets']=data.shape[0]
     #print data.index
     #print "##############################"
 
