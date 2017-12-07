@@ -47,6 +47,7 @@ for i in dates:
     if newdates.shape[0]!=0:
         #print positive.shape[0]/newdates.shape[0]
         total= positive.shape[0]+negative.shape[0]
+	#total= newdates.shape[0]
         if total != 0:
             consolidated.at[i, 'positive_news']=(positive.shape[0]/total)
             #print consolidated.at[i, 'positive_news']
@@ -58,6 +59,7 @@ for i in dates:
     wnegative=wnewdates[wnewdates["Weather Sentiment"]== -1]
     if wnewdates.shape[0] != 0:
         total= wpositive.shape[0]+wnegative.shape[0]
+	#total=wnewdates.shape[0]
         if total != 0:
             consolidated.at[i, 'positive_weather']=wpositive.shape[0]/total
             consolidated.at[i, 'negative_weather']=wnegative.shape[0]/total
@@ -78,6 +80,7 @@ for l in lists:
         negative=data[data["Sentiment"]== -1]
         if data.shape[0] != 0:
             total= positive.shape[0]+negative.shape[0]
+	    #total= data.shape[0]
             if total!= 0:
                 consolidated.at[i, 'positive_tweets']=positive.shape[0]/total
                 consolidated.at[i, 'negative_tweets']=negative.shape[0]/total
