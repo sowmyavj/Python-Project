@@ -32,6 +32,7 @@ for l in lists1:
         date=row["pub_date"][0:10]
         date1=row["pub_date"][11:13]
         date2=row["pub_date"][14:16]
+        #print date, date1, date2
         myrow["date"]=date
         myrow["date_hour"]=date1
         myrow["date_min"]=date2
