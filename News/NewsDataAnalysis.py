@@ -6,18 +6,18 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer as SIA
 from datetime import datetime
 
 #nltk.download('vader_lexicon')
-lists= os.listdir("./simplified/")
 lists1= os.listdir("./news/")
-#print lists
+
 
 sia = SIA()
-pos_list = []
-neg_list = []
-pos=0
-neg=0
-total=0
+filename= "NewsHeadlinesNYC.csv"
 
-output = csv.writer(open("NewsHeadlinesNYC.csv", "ab"))
+try:
+    os.remove(filename)
+except OSError:
+    pass
+
+output = csv.writer(open(filename, "ab"))
 first=True
 
 for l in lists1:
@@ -37,12 +37,12 @@ for l in lists1:
         myrow["date_min"]=date2
         myrow["web_url"]=row["web_url"]
         myrow["id"]=row["_id"]
-        if res['compound'] > 0.2:
-            myrow["sentiment"] = "positive"
-        elif res['compound'] < -0.2:
-            myrow["sentiment"] = "negative"
+        if res['compound'] > 0:
+            myrow["sentiment"] = 1
+        elif res['compound'] < 0:
+            myrow["sentiment"] = -1
         else:
-            myrow["sentiment"] = "none"
+            myrow["sentiment"] = 0
         output.writerow(myrow.values())
 
 

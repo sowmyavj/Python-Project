@@ -11,10 +11,22 @@ data['date'] = pd.to_datetime(data.date)
 data["date"] = data["date"].dt.strftime("%m-%d-%Y")
 data.set_index('date',inplace=True)
 
-print "Corr news and weather positive"
-print data['positive_news'].corr(data['positive_weather'])
+print "Corr news and tweets positive"
+print data['positive_news'].corr(data['positive_tweets'])
 print "*******************************\n\n"
 
-print "Corr news and weather negative"
-print data['negative_news'].corr(data['negative_weather'])
+print "Corr news and tweets negative"
+print data['negative_news'].corr(data['negative_tweets'])
+print "*******************************\n\n"
+
+print "Corr weather and tweets positive"
+print data['positive_weather'].corr(data['positive_tweets'])
+print "*******************************\n\n"
+
+print "Corr weather and tweets negative"
+print data['negative_weather'].corr(data['negative_tweets'])
+print "*******************************\n\n"
+
+print "Corr news negative and tweets positive"
+print data['negative_news'].corr(data['positive_tweets'])
 print "*******************************\n\n"
