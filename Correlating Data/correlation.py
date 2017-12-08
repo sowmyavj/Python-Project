@@ -7,7 +7,7 @@ style.use('ggplot')
 
 #create consolidated for News
 data = pd.read_csv('Consolidated_Output.csv', sep=',', na_values=".")
-#data = pd.read_csv('Consolidated_Output.csv_totaltweets', sep=',', na_values=".")
+#data = pd.read_csv('Consolidated_Output_total.csv', sep=',', na_values=".")
 data['date'] = pd.to_datetime(data.date)
 data["date"] = data["date"].dt.strftime("%m-%d-%Y")
 data.set_index('date',inplace=True)
@@ -18,6 +18,14 @@ print "*******************************\n\n"
 
 print "Corr news and tweets negative"
 print data['negative_news'].corr(data['negative_tweets'])
+print "*******************************\n\n"
+
+print "Corr negative news and tweets positive"
+print data['negative_news'].corr(data['positive_tweets'])
+print "*******************************\n\n"
+
+print "Corr positive news and tweets negative"
+print data['positive_news'].corr(data['negative_tweets'])
 print "*******************************\n\n"
 
 print "Corr weather and tweets positive"
